@@ -111,8 +111,12 @@ function render() {
   const width = Math.max(920, els.chart.clientWidth || 920);
   const height = Math.max(620, Math.min(920, 260 + graph.nodes.length * 30));
   const svg = d3.select(els.chart).append('svg')
-    .attr('viewBox', [0, 0, width, height])
-    .attr('xmlns', 'http://www.w3.org/2000/svg');
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('width', width)
+    .attr('height', height)
+    .attr('preserveAspectRatio', 'xMinYMin meet')
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
+    .style('display', 'block');
 
   const sankey = d3.sankey()
     .nodeWidth(18)
@@ -136,6 +140,7 @@ function render() {
     .attr('d', d3.sankeyLinkHorizontal())
     .attr('stroke', d => colors(d.category || d.source.category || 'Other'))
     .attr('stroke-opacity', 0.42)
+    .style('mix-blend-mode', 'normal')
     .attr('stroke-width', d => Math.max(1, d.width))
     .on('mousemove', (event, d) => showTooltip(tooltip, event, `<strong>${d.source.name} → ${d.target.name}</strong><br>${d.value.toLocaleString()} tickets${d.priority ? `<br>Priority: ${d.priority}` : ''}`))
     .on('mouseleave', () => hideTooltip(tooltip))

@@ -52,8 +52,8 @@ button:hover { transform: translateY(-1px); filter: brightness(1.08); }
 .chart-heading { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 12px; }
 h2 { margin: 0 0 6px; letter-spacing: -0.03em; }
 p { color: var(--muted); }
-#chart { width: 100%; min-height: 620px; overflow-x: auto; }
-svg { width: 100%; height: auto; min-width: 820px; }
+#chart { width: 100%; min-height: 620px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+svg { display: block; width: 100%; height: auto; min-width: 820px; overflow: visible; }
 .node rect { shape-rendering: crispEdges; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.28)); }
 .node text { fill: var(--text); font-size: 13px; font-weight: 800; paint-order: stroke; stroke: rgba(7,17,31,0.8); stroke-width: 3px; stroke-linejoin: round; }
 .link { fill: none; mix-blend-mode: screen; }
