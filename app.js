@@ -43,6 +43,7 @@ const colors = d3.scaleOrdinal()
 
 const els = {
   sampleSelect: document.getElementById('sampleSelect'),
+  loadSample: document.getElementById('loadSample'),
   csvUpload: document.getElementById('csvUpload'),
   minFlow: document.getElementById('minFlow'),
   minFlowLabel: document.getElementById('minFlowLabel'),
@@ -237,13 +238,22 @@ function download(filename, content, type) {
   URL.revokeObjectURL(url);
 }
 
-els.sampleSelect.addEventListener('change', event => {
-  const sample = samples[event.target.value];
+function loadSample(key) {
+  const sample = samples[key];
+  if (!sample) return;
   currentRows = sample.links.map(rowToObject);
   datasetName = sample.label;
   els.datasetNote.textContent = sample.note;
   els.csvUpload.value = '';
-  render();
+  requestAnimationFrame(() => render());
+}
+
+els.sampleSelect.addEventListener('change', event => {
+  loadSample(event.target.value);
+});
+
+els.loadSample.addEventListener('click', () => {
+  loadSample(els.sampleSelect.value);
 });
 
 els.csvUpload.addEventListener('change', async event => {
@@ -261,6 +271,9 @@ els.csvUpload.addEventListener('change', async event => {
 
 els.minFlow.addEventListener('input', render);
 window.addEventListener('resize', () => render());
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) render();
+});
 
 els.downloadSvg.addEventListener('click', () => {
   const svg = els.chart.querySelector('svg');
@@ -275,5 +288,4 @@ els.downloadCsv.addEventListener('click', () => {
   download(`${datasetName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.csv`, [header, ...lines].join('\n'), 'text/csv');
 });
 
-els.datasetNote.textContent = samples.enterprise.note;
-render();
+loadSample('enterprise');
