@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IT Ticket Flow Sankey Analyzer</title>
+  <meta name="description" content="Analyze IT ticket routing from Service Desk through support teams with an interactive Sankey diagram." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Service Governance Analytics</p>
+      <h1>IT Ticket Flow Sankey Analyzer</h1>
+      <p class="lede">Visualize how tickets move from Service Desk to resolver teams, spot handoff loops, and identify routing opportunities before the meatsacks drown in queue noise.</p>
+    </div>
+    <div class="hero-card">
+      <span id="totalTickets">0</span>
+      <small>tickets represented</small>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel controls" aria-label="Controls">
+      <div class="control-group">
+        <label for="sampleSelect">Sample data</label>
+        <select id="sampleSelect">
+          <option value="enterprise">Enterprise IT Operations</option>
+          <option value="workplace">Digital Workplace</option>
+          <option value="security">Security & Access</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="csvUpload">Load your CSV</label>
+        <input id="csvUpload" type="file" accept=".csv,text/csv" />
+        <small>Use columns: source,target,count. Optional: priority,category.</small>
+      </div>
+
+      <div class="control-group range-wrap">
+        <label for="minFlow">Minimum flow: <strong id="minFlowLabel">1</strong></label>
+        <input id="minFlow" type="range" min="1" max="100" value="1" />
+      </div>
+
+      <div class="button-row">
+        <button id="downloadSvg" type="button">Download SVG</button>
+        <button id="downloadCsv" type="button">Download current CSV</button>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="Summary statistics">
+      <article class="stat"><span id="teamCount">0</span><small>teams / queues</small></article>
+      <article class="stat"><span id="handoffCount">0</span><small>handoff paths</small></article>
+      <article class="stat"><span id="topPath">—</span><small>largest path</small></article>
+      <article class="stat"><span id="reassignmentRate">—</span><small>multi-hop estimate</small></article>
+    </section>
+
+    <section class="panel chart-panel">
+      <div class="chart-heading">
+        <div>
+          <h2>Ticket routing flow</h2>
+          <p id="datasetNote">Follow ticket volume across queues. Wider links mean more tickets.</p>
+        </div>
+        <div id="legend" class="legend"></div>
+      </div>
+      <div id="chart" role="img" aria-label="Sankey diagram of ticket handoffs"></div>
+      <p id="emptyState" class="empty hidden">No paths match the current minimum flow. Lower the threshold, magnificent monkey.</p>
+    </section>
+
+    <section class="panel insight-panel">
+      <h2>Routing insights</h2>
+      <ul id="insights"></ul>
+    </section>
+
+    <section class="panel help-panel">
+      <h2>CSV format</h2>
+      <p>Upload a CSV with one row per handoff. The tool aggregates duplicate paths automatically.</p>
+      <pre>source,target,count,category,priority
+Service Desk,Desktop Support,420,Hardware,P2
+Desktop Support,Endpoint Engineering,95,Hardware,P3</pre>
+    </section>
+  </main>
+
+  <footer>
+    Built for ticket-flow analysis. Drop in exported incident/assignment data and let the Sankey reveal the queue spaghetti.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
